@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.Handler">
+   <children>
+      <Pane fx:id="codePane" prefHeight="600.0" prefWidth="800.0" visible="false">
+         <children>
+            <MenuBar blendMode="DIFFERENCE" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="800.0">
+              <menus>
+                <Menu mnemonicParsing="false" style="-fx-font-: Comic Sans MS;" text="File">
+                     <items>
+                        <Menu mnemonicParsing="false" text="New">
+                          <items>
+                              <MenuItem fx:id="menuNewBF" mnemonicParsing="false" onAction="#onMenuNewBF" text="BF" />
+                              <MenuItem fx:id="menuNewOok" mnemonicParsing="false" onAction="#onMenuNewOok" text="Ook" />
+                          </items>
+                        </Menu>
+                        <MenuItem fx:id="menuOpen" mnemonicParsing="false" onAction="#onMenuOpen" text="Open" />
+                        <MenuItem fx:id="menuSave" mnemonicParsing="false" onAction="#onMenuSave" text="Save" />
+                        <MenuItem fx:id="menuExit" mnemonicParsing="false" onAction="#onMenuExit" text="Exit" />
+                     </items>
+                </Menu>
+                <Menu fx:id="menuRun" mnemonicParsing="false" onAction="#onRun" text="Run">
+                     <items>
+                        <MenuItem fx:id="menuExecute" mnemonicParsing="false" onAction="#onRun" text="Execute" />
+                     </items></Menu>
+                <Menu mnemonicParsing="false" text="Version">
+                  <items>
+                    <MenuItem fx:id="menuLastOne" disable="true" mnemonicParsing="false" onAction="#onLastOne" text="Last one" />
+                        <MenuItem fx:id="menuLastTwo" disable="true" mnemonicParsing="false" onAction="#onLastTwo" text="Last two" />
+                        <MenuItem fx:id="menuLastThree" disable="true" mnemonicParsing="false" onAction="#onLastThree" text="Last three" />
+                  </items>
+                </Menu>
+                  <Menu mnemonicParsing="false" text="More">
+                    <items>
+                        <MenuItem fx:id="menuUndo" mnemonicParsing="false" onAction="#onUndo" text="Undo" />
+                      <MenuItem fx:id="menuRedo" mnemonicParsing="false" onAction="#onRedo" text="Redo" />
+                    </items>
+                  </Menu>
+              </menus>
+               <opaqueInsets>
+                  <Insets bottom="5.0" top="5.0" />
+               </opaqueInsets>
+            </MenuBar>
+            <Label fx:id="lbName" layoutX="14.0" layoutY="38.0" text="Enter your code here" textFill="#cd5c50">
+               <font>
+                  <Font name="Comic Sans MS" size="36.0" />
+               </font>
+            </Label>
+            <TextArea fx:id="taCode" disable="true" layoutY="92.0" prefHeight="156.0" prefWidth="800.0" promptText="code" wrapText="true">
+               <font>
+                  <Font name="Comic Sans MS" size="24.0" />
+               </font></TextArea>
+            <Label layoutX="14.0" layoutY="248.0" text="Enter your input here" textFill="#cd5c50">
+               <font>
+                  <Font name="Comic Sans MS" size="36.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tfInput" disable="true" layoutY="302.0" prefHeight="51.0" prefWidth="800.0" promptText="input">
+               <font>
+                  <Font name="Comic Sans MS" size="24.0" />
+               </font></TextField>
+            <Label layoutX="14.0" layoutY="353.0" text="Output" textFill="#cd5c50">
+               <font>
+                  <Font name="Comic Sans MS" size="36.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tfResult" disable="true" layoutY="404.0" prefHeight="51.0" prefWidth="800.0" promptText="output">
+               <font>
+                  <Font name="Comic Sans MS" size="24.0" />
+               </font></TextField>
+            <Button fx:id="btRun" contentDisplay="CENTER" layoutX="278.0" layoutY="507.0" mnemonicParsing="false" onAction="#onRun" prefHeight="51.0" prefWidth="105.0" text="Run" textFill="#cd5c50">
+               <font>
+                  <Font name="Comic Sans MS" size="24.0" />
+               </font>
+            </Button>
+            <Label fx:id="userName" alignment="CENTER_RIGHT" layoutX="615.0" layoutY="512.0" prefHeight="38.0" prefWidth="91.0" text="Name" textAlignment="RIGHT">
+               <font>
+                  <Font name="Comic Sans MS" size="24.0" />
+               </font>
+            </Label>
+            <Label fx:id="logOut" layoutX="713.0" layoutY="554.0" onMouseClicked="#onLogOut" text="Logout">
+               <font>
+                  <Font name="Comic Sans MS" size="24.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="74.0" fitWidth="72.0" layoutX="714.0" layoutY="488.0">
+               <image>
+                  <Image url="@login.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+      <Pane fx:id="logAndRegisterPane" prefHeight="600.0" prefWidth="800.0">
+         <children>
+            <Label layoutX="131.0" layoutY="330.0" text="Password">
+               <font>
+                  <Font name="Comic Sans MS" size="36.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tfUserName" layoutX="324.0" layoutY="237.0" prefHeight="58.0" prefWidth="343.0">
+               <font>
+                  <Font name="Comic Sans MS" size="24.0" />
+               </font></TextField>
+            <Label layoutX="131.0" layoutY="240.0" text="Name">
+               <font>
+                  <Font name="Comic Sans MS" size="36.0" />
+               </font>
+            </Label>
+            <PasswordField fx:id="tfPassword" layoutX="324.0" layoutY="326.0" prefHeight="58.0" prefWidth="343.0">
+               <font>
+                  <Font name="Comic Sans MS" size="24.0" />
+               </font></PasswordField>
+            <Button fx:id="btLogIn" layoutX="208.0" layoutY="419.0" mnemonicParsing="false" onAction="#onLogIn" prefHeight="51.0" prefWidth="143.0" text="Log in">
+               <font>
+                  <Font name="Comic Sans MS" size="24.0" />
+               </font>
+            </Button>
+            <Button fx:id="btRegister" layoutX="471.0" layoutY="419.0" mnemonicParsing="false" onAction="#onRegister" prefHeight="51.0" prefWidth="143.0" text="Register">
+               <font>
+                  <Font name="Comic Sans MS" size="24.0" />
+               </font>
+            </Button>
+            <Text boundsType="VISUAL" fill="#43e4c7" layoutX="190.0" layoutY="82.0" stroke="#db3e3e" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to the world of BrainFuck and Ook" textAlignment="CENTER" textOrigin="TOP" wrappingWidth="442.8681640625">
+               <font>
+                  <Font name="Comic Sans MS" size="36.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <Pane fx:id="newPane" prefHeight="600.0" prefWidth="800.0" visible="false">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f6f7f8" height="266.0" layoutX="211.0" layoutY="167.0" stroke="BLACK" strokeType="INSIDE" width="406.0" />
+            <TextField fx:id="tfFileName" layoutX="337.0" layoutY="250.0" prefHeight="51.0" prefWidth="258.0">
+               <font>
+                  <Font name="Comic Sans MS" size="24.0" />
+               </font>
+            </TextField>
+            <Label layoutX="237.0" layoutY="261.0" text="File Name">
+               <font>
+                  <Font name="Comic Sans MS" size="18.0" />
+               </font>
+            </Label>
+            <Button fx:id="btCreateNew" layoutX="286.0" layoutY="364.0" mnemonicParsing="false" onAction="#onCreateNew" prefHeight="36.0" prefWidth="105.0" text="OK">
+               <font>
+                  <Font name="Comic Sans MS" size="18.0" />
+               </font>
+            </Button>
+            <Button fx:id="btCancelCreateNew" layoutX="443.0" layoutY="364.0" mnemonicParsing="false" onAction="#onCancelCreateNew" prefHeight="37.0" prefWidth="105.0" text="Cancel">
+               <font>
+                  <Font name="Comic Sans MS" size="18.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
+      <Pane fx:id="openFilePane" prefHeight="600.0" prefWidth="800.0" visible="false">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f6f7f8" height="266.0" layoutX="197.0" layoutY="167.0" stroke="BLACK" strokeType="INSIDE" width="406.0" />
+            <Button fx:id="btOpenFile" layoutX="270.0" layoutY="355.0" mnemonicParsing="false" onAction="#onOpenFile" prefHeight="37.0" prefWidth="105.0" text="OK">
+               <font>
+                  <Font name="Comic Sans MS" size="18.0" />
+               </font>
+            </Button>
+            <Button fx:id="btCancelOpenFile" layoutX="435.0" layoutY="355.0" mnemonicParsing="false" onAction="#onCancelOpenFile" prefHeight="37.0" prefWidth="105.0" text="Cancel">
+               <font>
+                  <Font name="Comic Sans MS" size="18.0" />
+               </font>
+            </Button>
+            <Label layoutX="268.0" layoutY="201.0" text="Please choose a file :">
+               <font>
+                  <Font name="Comic Sans MS" size="24.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="fileList" layoutX="268.0" layoutY="264.0" prefHeight="36.0" prefWidth="269.0" />
+         </children>
+      </Pane>
+      <Pane fx:id="promptPane" prefHeight="600.0" prefWidth="800.0" visible="false">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f6f7f8" height="266.0" layoutX="203.0" layoutY="156.0" stroke="BLACK" strokeType="INSIDE" width="406.0" />
+            <Button fx:id="btPromptOk" layoutX="354.0" layoutY="352.0" mnemonicParsing="false" onAction="#onPromptOk" prefHeight="36.0" prefWidth="105.0" text="OK">
+               <font>
+                  <Font name="Comic Sans MS" size="18.0" />
+               </font>
+            </Button>
+            <Text fx:id="textPrompt" layoutX="225.0" layoutY="253.0" strokeType="OUTSIDE" strokeWidth="0.0" text="thank you" textAlignment="CENTER" wrappingWidth="362.671875">
+               <font>
+                  <Font name="Comic Sans MS" size="24.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+   </children>
+</Pane>
