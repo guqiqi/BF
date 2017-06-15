@@ -1,6 +1,8 @@
 package ui;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -11,6 +13,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
@@ -21,6 +24,12 @@ public class Handler {
 	private static String type = "";
 	//保存时候文件名读取方法：1，新建之后从tfFileName中获得；2，读取文件时从fileList中获得
 	private static int state = 0;
+	//保存所有的输入，只要有更新就保存
+	private static ArrayList<String> input = new ArrayList<String>();
+	//记录目前undo次数
+	private static int undoCount = 0;
+	//记录这是不是第一次撤销
+	private static int isFirstUndo = 1;
 	
 	//-------------------------------正常运行界面--------------------------------
 	@FXML
@@ -114,6 +123,14 @@ public class Handler {
 	@FXML
 	private ComboBox<String> fileList;
 	
+	//-----------------------------------结束提示界面--------------------------------------
+	@FXML
+	private Pane exitPane;
+	@FXML
+	private Button btConfirmExit;
+	@FXML
+	private Button btCancelExit;
+	
 	//----------------------------------此处开始有事件处理------------------------------------
 	//------------------------------------菜单相关-----------------------------------------
 	//创建时候直接确定文件名称（要出现一个命名的提示框）
@@ -142,6 +159,14 @@ public class Handler {
 		menuLastOne.setDisable(true);
 		menuLastTwo.setDisable(true);
 		menuLastThree.setDisable(true);
+		
+		menuUndo.setDisable(true);
+		menuRedo.setDisable(true);
+		input.clear();
+		undoCount = 0;
+		
+		menuSave.setDisable(false);
+		menuExecute.setDisable(false);
 		
 		boolean flag = false;
 
@@ -219,8 +244,8 @@ public class Handler {
 		try {
 			files = RemoteHelper.getInstance().getIOService().getFileList(tfUserName.getText());
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			promptPane.setVisible(true);
+			textPrompt.setText("Remote Error!");
 		}
 		
 		if(files.length == 0){
@@ -249,6 +274,14 @@ public class Handler {
 		tfInput.setText("");
 		tfResult.setText("");
 		
+		menuUndo.setDisable(true);
+		menuRedo.setDisable(true);
+		input.clear();
+		undoCount = 0;
+		
+		menuSave.setDisable(false);
+		menuExecute.setDisable(false);
+		
 		try {
 			int versionNumber = RemoteHelper.getInstance().getIOService().getVersionNumber(tfUserName.getText(), fileList.getValue());
 			
@@ -273,23 +306,24 @@ public class Handler {
 				menuLastThree.setDisable(true);
 			}
 		} catch (RemoteException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			promptPane.setVisible(true);
+			textPrompt.setText("Remote Error!");
 		}
 		
 		try {
 			String file = RemoteHelper.getInstance().getIOService().readFile(tfUserName.getText(), fileList.getValue());
 			
-			if(file.split("~").length == 1)
-				taCode.setText(file);
-				
-			else if(file.split("~").length == 2){
-				taCode.setText(file.split("~")[0]);
-				tfInput.setText(file.split("~")[1]);
+			if(file.equals(""))
+				taCode.setText("");	
+			else if(file.split(";").length == 1)
+				taCode.setText(file.substring(0, file.length() - 1));
+			else if(file.split(";").length == 2){
+				taCode.setText(file.split(";")[0]);
+				tfInput.setText(file.split(";")[1]);
 			}
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			promptPane.setVisible(true);
+			textPrompt.setText("Remote Error!");
 		}
 	}
 	@FXML
@@ -298,9 +332,14 @@ public class Handler {
 	}
 	@FXML
 	private void onMenuSave(ActionEvent event){
+		menuUndo.setDisable(true);
+		menuRedo.setDisable(true);
+		input.clear();
+		undoCount = 0;
+		
 		try {
 			RemoteHelper.getInstance().getIOService().writeFile
-				(taCode.getText() + "~" + tfInput.getText() + "\r\n", tfUserName.getText(), getFileName());
+				(taCode.getText() + ";" + tfInput.getText() + System.lineSeparator(), tfUserName.getText(), getFileName());
 			
 			int versionNumber = RemoteHelper.getInstance().getIOService().getVersionNumber(tfUserName.getText(), getFileName());
 			
@@ -326,7 +365,7 @@ public class Handler {
 			}
 		} catch (RemoteException e) {
 			promptPane.setVisible(true);
-			textPrompt.setText("Failure!");
+			textPrompt.setText("Remote Error!");
 		}
 	}
 	
@@ -358,15 +397,22 @@ public class Handler {
 		return fileName;
 	}
 	
-	//提示是否确定退出
 	@FXML
 	private void onMenuExit(ActionEvent event){
+		exitPane.setVisible(true);
+	}
+	@FXML
+	private void onExit(ActionEvent event){
 		System.exit(0);
 	}
+	@FXML
+	private void onCancelExit(ActionEvent event){
+		exitPane.setVisible(false);
+	}
+	
 	//-------------------run-------------------------
 	@FXML
 	private void onRun(ActionEvent event){
-		System.out.println("run");
 		String result = "";
 		try {
 			result = RemoteHelper.getInstance().getExecuteService().execute(taCode.getText(), tfInput.getText());
@@ -386,6 +432,11 @@ public class Handler {
 	//-------------------version---------------------
 	@FXML
 	private void onLastOne(ActionEvent event){
+		menuUndo.setDisable(true);
+		menuRedo.setDisable(true);
+		input.clear();
+		undoCount = 0;
+		
 		//代码、输入、输出改变
 		taCode.setDisable(false);
 		tfInput.setDisable(false);
@@ -397,21 +448,26 @@ public class Handler {
 		try {
 			String file = RemoteHelper.getInstance().getIOService().getSpecifiedVersion(1, tfUserName.getText(), getFileName());
 	
-			if(file.split("~").length == 1)
-				taCode.setText(file);
+			if(file.split(";").length == 1)
+				taCode.setText(file.substring(0, file.length() - 1));
 				
-			else if(file.split("~").length == 2){
-				taCode.setText(file.split("~")[0]);
-				tfInput.setText(file.split("~")[1]);
+			else if(file.split(";").length == 2){
+				taCode.setText(file.split(";")[0]);
+				tfInput.setText(file.split(";")[1]);
 			}
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			promptPane.setVisible(true);
+			textPrompt.setText("Remote Error!");
 		}
 		
 	}
 	@FXML
 	private void onLastTwo(ActionEvent event){
+		menuUndo.setDisable(true);
+		menuRedo.setDisable(true);
+		input.clear();
+		undoCount = 0;
+		
 		taCode.setDisable(false);
 		tfInput.setDisable(false);
 		tfResult.setDisable(false);
@@ -422,20 +478,25 @@ public class Handler {
 		try {
 			String file = RemoteHelper.getInstance().getIOService().getSpecifiedVersion(2, tfUserName.getText(), getFileName());
 		
-			if(file.split("~").length == 1)
-				taCode.setText(file);
+			if(file.split(";").length == 1)
+				taCode.setText(file.substring(0, file.length() - 1));
 				
-			else if(file.split("~").length == 2){
-				taCode.setText(file.split("~")[0]);
-				tfInput.setText(file.split("~")[1]);
+			else if(file.split(";").length == 2){
+				taCode.setText(file.split(";")[0]);
+				tfInput.setText(file.split(";")[1]);
 			}
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			promptPane.setVisible(true);
+			textPrompt.setText("Remote Error!");
 		}
 	}
 	@FXML
 	private void onLastThree(ActionEvent event){
+		menuUndo.setDisable(true);
+		menuRedo.setDisable(true);
+		input.clear();
+		undoCount = 0;
+		
 		taCode.setDisable(false);
 		tfInput.setDisable(false);
 		tfResult.setDisable(false);
@@ -446,26 +507,93 @@ public class Handler {
 		try {
 			String file = RemoteHelper.getInstance().getIOService().getSpecifiedVersion(3, tfUserName.getText(), getFileName());
 		
-			if(file.split("~").length == 1)
-				taCode.setText(file);
+			if(file.split(";").length == 1)
+				taCode.setText(file.substring(0, file.length() - 1));
 				
-			else if(file.split("~").length == 2){
-				taCode.setText(file.split("~")[0]);
-				tfInput.setText(file.split("~")[1]);
+			else if(file.split(";").length == 2){
+				taCode.setText(file.split(";")[0]);
+				tfInput.setText(file.split(";")[1]);
 			}
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			promptPane.setVisible(true);
+			textPrompt.setText("Remote Error!");
 		}
 	}
 	//---------------------more-----------------------
-	@FXML
+	//isFirstUndo记录是不是第一次撤销
+	//1:整个过程第一次撤销，这时候要把最前面的去掉，还要把现在的加上去
+	//2:某次撤销之后，这时候如果还是撤销的话不变，如果只是加东西的话要把最后一条记录去掉
+	//3:不是整个过程的第一次撤销，但前面一次操作是加东西，这时候要加现在的内容
+	@FXML //撤销
 	private void onUndo(ActionEvent event){
-		System.out.println("undo");
+		if(isFirstUndo == 1){
+			isFirstUndo = 2;
+			input.remove(0);
+			input.add(taCode.getText() + ";" + tfInput.getText());
+		}
+		else if(isFirstUndo == 3){
+			input.add(taCode.getText() + ";" + tfInput.getText());
+			isFirstUndo = 2;
+		}
+		
+		undoCount ++;
+		String file = "";
+		if(input.size() > undoCount)
+			file = input.get(input.size() - undoCount - 1);
+		else
+			menuUndo.setDisable(true);
+		
+		if(file.equals(""))
+			taCode.setText("");	
+		else if(file.split(";").length == 1)
+			taCode.setText(file.substring(0, file.length() - 1));
+		else if(file.split(";").length == 2){
+			taCode.setText(file.split(";")[0]);
+			tfInput.setText(file.split(";")[1]);
+		}
+		
+		menuRedo.setDisable(false);
+	}
+	@FXML //重做
+	private void onRedo(ActionEvent event){
+		undoCount --;
+		String file = input.get(input.size() - undoCount - 1);
+		
+		if(file.equals(""))
+			taCode.setText("");	
+		else if(file.split(";").length == 1)
+			taCode.setText(file.substring(0, file.length() - 1));
+		else if(file.split(";").length == 2){
+			taCode.setText(file.split(";")[0]);
+			tfInput.setText(file.split(";")[1]);
+		}
+		
+		if(undoCount == 0)
+			menuRedo.setDisable(true);
+		
 	}
 	@FXML
-	private void onRedo(ActionEvent event){
-		System.out.println("redo");
+	private void onRecordInputChanged(KeyEvent event){
+		menuRedo.setDisable(true);
+		
+		if(isFirstUndo == 2){
+			input.remove(input.size() - 1);
+			isFirstUndo = 3;
+		}
+		
+		String content = taCode.getText() + ";" + tfInput.getText();
+		input.add(content);
+	
+		if(undoCount != 0){
+			int flag = input.size() - undoCount;
+			for(int i = input.size() - 1; i >= flag; i --){
+				input.remove(i);
+			}
+			undoCount = 0;
+		}
+		
+		if(input.size() > 0)
+			menuUndo.setDisable(false);
 	}
 	//---------------------------------登录相关--------------------------------------
 	@FXML
@@ -561,6 +689,11 @@ public class Handler {
         menuLastOne.setDisable(true);
 		menuLastTwo.setDisable(true);
 		menuLastThree.setDisable(true);
+		
+		menuUndo.setDisable(true);
+		menuRedo.setDisable(true);
+		input.clear();
+		undoCount = 0;
           
         tfUserName.setText("");
         tfPassword.setText("");

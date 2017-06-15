@@ -29,19 +29,12 @@ public class ClientRunner extends Application{
 		}
 	}
 	
-	public void test(){
-		try {
-			System.out.println(remoteHelper.getUserService().login("admin", "123456a"));
-			System.out.println(remoteHelper.getIOService().writeFile("2", "admin", "testFile"));
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	@Override
 	public void start(Stage stage) throws Exception{
+		mainFrame.mainStage.setTitle("BrainFuck and Ook compiler");
 		mainFrame.mainStage.show();
 	}
+	
 	public static void main(String[] args) {
 		ClientRunner.linkToServer();
 	

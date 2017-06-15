@@ -24,13 +24,13 @@
                           </items>
                         </Menu>
                         <MenuItem fx:id="menuOpen" mnemonicParsing="false" onAction="#onMenuOpen" text="Open" />
-                        <MenuItem fx:id="menuSave" mnemonicParsing="false" onAction="#onMenuSave" text="Save" />
+                        <MenuItem fx:id="menuSave" disable="true" mnemonicParsing="false" onAction="#onMenuSave" text="Save" />
                         <MenuItem fx:id="menuExit" mnemonicParsing="false" onAction="#onMenuExit" text="Exit" />
                      </items>
                 </Menu>
                 <Menu fx:id="menuRun" mnemonicParsing="false" onAction="#onRun" text="Run">
                      <items>
-                        <MenuItem fx:id="menuExecute" mnemonicParsing="false" onAction="#onRun" text="Execute" />
+                        <MenuItem fx:id="menuExecute" disable="true" mnemonicParsing="false" onAction="#onRun" text="Execute" />
                      </items></Menu>
                 <Menu mnemonicParsing="false" text="Version">
                   <items>
@@ -41,8 +41,8 @@
                 </Menu>
                   <Menu mnemonicParsing="false" text="More">
                     <items>
-                        <MenuItem fx:id="menuUndo" mnemonicParsing="false" onAction="#onUndo" text="Undo" />
-                      <MenuItem fx:id="menuRedo" mnemonicParsing="false" onAction="#onRedo" text="Redo" />
+                        <MenuItem fx:id="menuUndo" disable="true" mnemonicParsing="false" onAction="#onUndo" text="Undo" />
+                      <MenuItem fx:id="menuRedo" disable="true" mnemonicParsing="false" onAction="#onRedo" text="Redo" />
                     </items>
                   </Menu>
               </menus>
@@ -55,7 +55,7 @@
                   <Font name="Comic Sans MS" size="36.0" />
                </font>
             </Label>
-            <TextArea fx:id="taCode" disable="true" layoutY="92.0" prefHeight="156.0" prefWidth="800.0" promptText="code" wrapText="true">
+            <TextArea fx:id="taCode" disable="true" layoutY="92.0" onKeyPressed="#onRecordInputChanged" prefHeight="156.0" prefWidth="800.0" promptText="code" wrapText="true">
                <font>
                   <Font name="Comic Sans MS" size="24.0" />
                </font></TextArea>
@@ -64,7 +64,7 @@
                   <Font name="Comic Sans MS" size="36.0" />
                </font>
             </Label>
-            <TextField fx:id="tfInput" disable="true" layoutY="302.0" prefHeight="51.0" prefWidth="800.0" promptText="input">
+            <TextField fx:id="tfInput" disable="true" layoutY="302.0" onKeyPressed="#onRecordInputChanged" prefHeight="51.0" prefWidth="800.0" promptText="input">
                <font>
                   <Font name="Comic Sans MS" size="24.0" />
                </font></TextField>
@@ -163,7 +163,7 @@
       </Pane>
       <Pane fx:id="openFilePane" prefHeight="600.0" prefWidth="800.0" visible="false">
          <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f6f7f8" height="266.0" layoutX="197.0" layoutY="167.0" stroke="BLACK" strokeType="INSIDE" width="406.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f6f7f8" height="266.0" layoutX="203.0" layoutY="155.0" stroke="BLACK" strokeType="INSIDE" width="406.0" />
             <Button fx:id="btOpenFile" layoutX="270.0" layoutY="355.0" mnemonicParsing="false" onAction="#onOpenFile" prefHeight="37.0" prefWidth="105.0" text="OK">
                <font>
                   <Font name="Comic Sans MS" size="18.0" />
@@ -174,12 +174,32 @@
                   <Font name="Comic Sans MS" size="18.0" />
                </font>
             </Button>
-            <Label layoutX="268.0" layoutY="201.0" text="Please choose a file :">
+            <ComboBox fx:id="fileList" layoutX="272.0" layoutY="252.0" prefHeight="36.0" prefWidth="269.0" />
+            <Label layoutX="270.0" layoutY="192.0" text="Please choose a file :">
                <font>
                   <Font name="Comic Sans MS" size="24.0" />
                </font>
             </Label>
-            <ComboBox fx:id="fileList" layoutX="268.0" layoutY="264.0" prefHeight="36.0" prefWidth="269.0" />
+         </children>
+      </Pane>
+      <Pane fx:id="exitPane" prefHeight="600.0" prefWidth="800.0" visible="false">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f6f7f8" height="266.0" layoutX="203.0" layoutY="156.0" stroke="BLACK" strokeType="INSIDE" width="406.0" />
+            <Button fx:id="btCancelExit" layoutX="452.0" layoutY="360.0" mnemonicParsing="false" onAction="#onCancelExit" prefHeight="37.0" prefWidth="105.0" text="Cancel">
+               <font>
+                  <Font name="Comic Sans MS" size="18.0" />
+               </font>
+            </Button>
+            <Button fx:id="btConfirmExit" layoutX="268.0" layoutY="360.0" mnemonicParsing="false" onAction="#onExit" prefHeight="37.0" prefWidth="105.0" text="OK">
+               <font>
+                  <Font name="Comic Sans MS" size="18.0" />
+               </font>
+            </Button>
+            <Text layoutX="249.0" layoutY="241.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Are you sure to exit?" textAlignment="CENTER" wrappingWidth="314.0">
+               <font>
+                  <Font name="Comic Sans MS" size="35.0" />
+               </font>
+            </Text>
          </children>
       </Pane>
       <Pane fx:id="promptPane" prefHeight="600.0" prefWidth="800.0" visible="false">
