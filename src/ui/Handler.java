@@ -334,8 +334,8 @@ public class Handler {
 	private void onMenuSave(ActionEvent event){
 		menuUndo.setDisable(true);
 		menuRedo.setDisable(true);
-		input.clear();
-		undoCount = 0;
+		//input.clear();
+		//undoCount = 0;
 		
 		try {
 			RemoteHelper.getInstance().getIOService().writeFile
@@ -545,8 +545,10 @@ public class Handler {
 		
 		if(file.equals(""))
 			taCode.setText("");	
-		else if(file.split(";").length == 1)
+		else if(file.split(";").length == 1){
 			taCode.setText(file.substring(0, file.length() - 1));
+			tfInput.setText("");
+		}
 		else if(file.split(";").length == 2){
 			taCode.setText(file.split(";")[0]);
 			tfInput.setText(file.split(";")[1]);
@@ -582,8 +584,15 @@ public class Handler {
 		}
 		
 		String content = taCode.getText() + ";" + tfInput.getText();
-		input.add(content);
-	
+		if(input.size() == 0){
+			input.add(content);
+		}
+		else{
+			if(!input.get(input.size() - 1).equals(content)){
+				input.add(content);
+			}
+		}
+			
 		if(undoCount != 0){
 			int flag = input.size() - undoCount;
 			for(int i = input.size() - 1; i >= flag; i --){
@@ -686,6 +695,9 @@ public class Handler {
         tfInput.setDisable(true);
         tfResult.setDisable(true);
         
+        menuSave.setDisable(true);
+        menuExecute.setDisable(true);
+        
         menuLastOne.setDisable(true);
 		menuLastTwo.setDisable(true);
 		menuLastThree.setDisable(true);
@@ -697,6 +709,10 @@ public class Handler {
           
         tfUserName.setText("");
         tfPassword.setText("");
+        
+        taCode.setText("");
+        tfInput.setText("");
+        tfResult.setText("");
 	}
 	
 	//--------------------------------提示界面只有一个OK按钮-------------------------------------

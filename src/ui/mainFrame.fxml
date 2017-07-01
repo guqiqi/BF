@@ -99,8 +99,13 @@
             </ImageView>
          </children>
       </Pane>
-      <Pane fx:id="logAndRegisterPane" prefHeight="600.0" prefWidth="800.0">
+      <Pane fx:id="logAndRegisterPane" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: white;">
          <children>
+            <ImageView fitHeight="600.0" fitWidth="800.0">
+               <image>
+                  <Image url="@background.jpg" />
+               </image>
+            </ImageView>
             <Label layoutX="131.0" layoutY="330.0" text="Password">
                <font>
                   <Font name="Comic Sans MS" size="36.0" />
@@ -129,16 +134,16 @@
                   <Font name="Comic Sans MS" size="24.0" />
                </font>
             </Button>
-            <Text boundsType="VISUAL" fill="#43e4c7" layoutX="190.0" layoutY="82.0" stroke="#db3e3e" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to the world of BrainFuck and Ook" textAlignment="CENTER" textOrigin="TOP" wrappingWidth="442.8681640625">
-               <font>
-                  <Font name="Comic Sans MS" size="36.0" />
-               </font>
-            </Text>
+            <ImageView fitHeight="328.0" fitWidth="458.0" layoutX="150.0" layoutY="-14.0">
+               <image>
+                  <Image url="@welcome.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
       <Pane fx:id="newPane" prefHeight="600.0" prefWidth="800.0" visible="false">
          <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f6f7f8" height="266.0" layoutX="211.0" layoutY="167.0" stroke="BLACK" strokeType="INSIDE" width="406.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f6f7f8" height="266.0" layoutX="204.0" layoutY="155.0" stroke="BLACK" strokeType="INSIDE" width="406.0" />
             <TextField fx:id="tfFileName" layoutX="337.0" layoutY="250.0" prefHeight="51.0" prefWidth="258.0">
                <font>
                   <Font name="Comic Sans MS" size="24.0" />
